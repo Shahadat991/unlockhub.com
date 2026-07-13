@@ -14,7 +14,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   ];
 
   try {
-    const pageEntries: MetadataRoute.Sitemap = listPages()
+    const pageEntries: MetadataRoute.Sitemap = (await listPages())
       .filter((p) => p.enabled)
       .map((p) => ({
         url: `${siteConfig.url}/go/${p.slug}`,

@@ -75,7 +75,7 @@ export async function createPageAction(
       thumbnail_url = await saveThumbnail(thumb, fields.slug);
     }
 
-    db.createPage({ ...fields, thumbnail_url });
+    await db.createPage({ ...fields, thumbnail_url });
     revalidateAll(fields.slug);
     return { ok: true, slug: fields.slug };
   } catch (e) {
@@ -91,7 +91,7 @@ export async function updatePageAction(
     await requireAdmin();
     const fields = parsePageForm(formData);
 
-    const existing = db.getPageById(id);
+    const existing = await db.getPageById(id);
     if (!existing) return { ok: false, error: "Page not found." };
 
     const thumb = formData.get("thumbnail");
@@ -105,7 +105,7 @@ export async function updatePageAction(
       thumbnail_url = await saveThumbnail(thumb, fields.slug);
     }
 
-    db.updatePage(id, { ...fields, thumbnail_url });
+    await db.updatePage(id, { ...fields, thumbnail_url });
 
     revalidateAll(fields.slug);
     if (existing.slug !== fields.slug) revalidatePath(`/go/${existing.slug}`);
@@ -118,7 +118,7 @@ export async function updatePageAction(
 export async function deletePageAction(id: string): Promise<ActionResult> {
   try {
     await requireAdmin();
-    const page = db.deletePage(id);
+    const page = await db.deletePage(id);
     if (!page) return { ok: false, error: "Page not found." };
     await removeThumbnail(page.thumbnail_url);
     revalidateAll(page.slug);
@@ -131,7 +131,7 @@ export async function deletePageAction(id: string): Promise<ActionResult> {
 export async function duplicatePageAction(id: string): Promise<ActionResult> {
   try {
     await requireAdmin();
-    const copy = db.duplicatePage(id);
+    const copy = await db.duplicatePage(id);
     if (!copy) return { ok: false, error: "Page not found." };
     revalidateAll(copy.slug);
     return { ok: true, slug: copy.slug };
@@ -146,7 +146,7 @@ export async function togglePageAction(
 ): Promise<ActionResult> {
   try {
     await requireAdmin();
-    const page = db.setPageEnabled(id, enabled);
+    const page = await db.setPageEnabled(id, enabled);
     if (!page) return { ok: false, error: "Page not found." };
     revalidateAll(page.slug);
     return { ok: true };
@@ -179,7 +179,7 @@ export async function updateAdSlotAction(
       return { ok: false, error: "Min height must be between 0 and 1000 px." };
     }
 
-    db.updateAdSlot(position, {
+    await db.updateAdSlot(position, {
       enabled: formData.get("enabled") === "on",
       label: String(formData.get("label") ?? "Advertisement").slice(0, 60),
       code: String(formData.get("code") ?? "").slice(0, 20_000),

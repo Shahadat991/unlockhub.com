@@ -70,7 +70,7 @@ function BreakdownCard({ title, items }: { title: string; items: Breakdown[] }) 
 }
 
 export default async function AdminDashboardPage() {
-  const stats = getDashboardStats();
+  const stats = await getDashboardStats();
 
   return (
     <div className="flex flex-col gap-8">

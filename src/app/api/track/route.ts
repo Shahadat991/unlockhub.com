@@ -32,7 +32,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Bad request" }, { status: 400 });
   }
 
-  const page = getPageBySlug(slug, { onlyEnabled: true });
+  const page = await getPageBySlug(slug, { onlyEnabled: true });
   if (!page) {
     return NextResponse.json({ error: "Not found" }, { status: 404 });
   }
@@ -45,7 +45,7 @@ export async function POST(request: NextRequest) {
   const hash = await visitorHash(ip, ua);
 
   if (type === "visit") {
-    recordVisit(page.id, {
+    await recordVisit(page.id, {
       visitor_hash: hash,
       country: countryName(request.headers.get("x-vercel-ip-country")),
       device: parseDevice(ua),
@@ -54,7 +54,7 @@ export async function POST(request: NextRequest) {
       referrer,
     });
   } else {
-    recordEvent(page.id, hash, "countdown_complete");
+    await recordEvent(page.id, hash, "countdown_complete");
   }
 
   return NextResponse.json({ ok: true });

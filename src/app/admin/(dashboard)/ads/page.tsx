@@ -4,7 +4,7 @@ import { AdSlotsManager } from "@/components/admin/AdSlotsManager";
 export const dynamic = "force-dynamic";
 
 export default async function AdminAdsPage() {
-  const slots = getAdSlots();
+  const slots = await getAdSlots();
 
   return (
     <div className="flex flex-col gap-6">

@@ -10,7 +10,7 @@ export default async function EditPagePage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const page = getPageById(id);
+  const page = await getPageById(id);
   if (!page) notFound();
 
   return (

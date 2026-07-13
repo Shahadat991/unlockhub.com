@@ -16,6 +16,15 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
+  // Native/runtime packages the server should load from node_modules
+  // instead of bundling (Turbopack chokes on libsql's asset files).
+  serverExternalPackages: [
+    "@libsql/client",
+    "@libsql/hrana-client",
+    "@libsql/isomorphic-fetch",
+    "@libsql/isomorphic-ws",
+    "libsql",
+  ],
   experimental: {
     serverActions: {
       // Allow thumbnail uploads up to ~4 MB through server actions.

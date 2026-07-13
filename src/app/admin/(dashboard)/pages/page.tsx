@@ -6,7 +6,7 @@ import { PagesTable } from "@/components/admin/PagesTable";
 export const dynamic = "force-dynamic";
 
 export default async function AdminPagesPage() {
-  const pages = listPagesWithStats();
+  const pages = await listPagesWithStats();
 
   return (
     <div className="flex flex-col gap-6">

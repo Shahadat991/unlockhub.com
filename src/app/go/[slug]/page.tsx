@@ -13,7 +13,7 @@ interface Props {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const page = getPageBySlug(slug, { onlyEnabled: true });
+  const page = await getPageBySlug(slug, { onlyEnabled: true });
   if (!page) {
     return { title: "Not found", robots: { index: false } };
   }
@@ -49,10 +49,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function GoPage({ params }: Props) {
   const { slug } = await params;
-  const page = getPageBySlug(slug, { onlyEnabled: true });
+  const page = await getPageBySlug(slug, { onlyEnabled: true });
   if (!page) notFound();
 
-  const adSlots = getAdSlots().filter((s) => s.enabled);
+  const adSlots = (await getAdSlots()).filter((s) => s.enabled);
 
   // Only safe fields reach the browser — never the destination URL.
   const publicPage: PublicLandingPage = {
